@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STOCK TECHNICALS</title>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+        }
+
+        .tradingview-widget-container {
+            width: 100%;
+            height: 100%;
+        }
+
+        .input-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .input-container input {
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 8px;
+            font-size: 14px;
+            margin-right: 10px;
+            flex-grow: 1;
+        }
+
+        .input-container button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 16px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .widget-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .widget-container .tradingview-widget-container {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+<!-- TradingView Widget BEGIN -->
+<div class="container">
+    <div class="input-container">
+        <input type="text" id="symbolInput" placeholder="Enter stock symbol (e.g., RELIANCE)">
+        <button onclick="loadTechnicals()">Load Technicals</button>
+    </div>
+    <div class="widget-container">
+        <div class="tradingview-widget-container">
+            <div class="tradingview-widget-container__widget"></div>
+        </div>
+    </div>
+    <div class="widget-container">
+        <div class="tradingview-widget-container">
+            <div class="tradingview-widget-container__widget"></div>
+        </div>
+    </div>
+</div>
+<!-- TradingView Widget END -->
+
+<script type="text/javascript">
+    function loadTechnicals() {
+        var symbolInput = document.getElementById('symbolInput');
+        var symbol = symbolInput.value;
+
+        if (symbol) {
+            var symbolWithExchange = "BSE:" + symbol;
+
+            var symbolInfoWidget = document.getElementsByClassName('tradingview-widget-container__widget')[0];
+            symbolInfoWidget.innerHTML = ''; // Clear previous widget
+
+            var symbolInfoWidgetConfig = {
+                "symbol": symbolWithExchange,
+                "width": 1475,
+                "locale": "in",
+                "colorTheme": "light",
+                "isTransparent": false
+            };
+            var symbolInfoScript = document.createElement('script');
+            symbolInfoScript.type = 'text/javascript';
+            symbolInfoScript.src = 'https://s3.tradingview.com/external-embedding/embed-widget-symbol-info.js';
+            symbolInfoScript.async = true;
+            symbolInfoScript.innerHTML = JSON.stringify(symbolInfoWidgetConfig);
+            symbolInfoWidget.appendChild(symbolInfoScript);
+
+            var technicalAnalysisWidget = document.getElementsByClassName('tradingview-widget-container__widget')[1];
+            technicalAnalysisWidget.innerHTML = ''; // Clear previous widget
+
+            var technicalAnalysisWidgetConfig = {
+                "interval": "1m",
+                "width": 425,
+                "isTransparent": false,
+                "height": 450,
+                "symbol": symbolWithExchange,
+                "showIntervalTabs": true,
+                "locale": "in",
+                "colorTheme": "light"
+            };
+            var technicalAnalysisScript = document.createElement('script');
+            technicalAnalysisScript.type = 'text/javascript';
+            technicalAnalysisScript.src = 'https://s3.tradingview.com/external-embedding/embed-widget-technical-analysis.js';
+            technicalAnalysisScript.async = true;
+            technicalAnalysisScript.innerHTML = JSON.stringify(technicalAnalysisWidgetConfig);
+            technicalAnalysisWidget.appendChild(technicalAnalysisScript);
+        }
+    }
+</script>
+</body>
+</html>

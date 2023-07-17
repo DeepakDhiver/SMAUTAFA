@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Indicator Calculator</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+    <style>
+        /* Global Styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        /* Header Styles */
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        
+        /* Form Styles */
+        form {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        label {
+            font-weight: bold;
+        }
+        
+        input[type="text"],
+        select {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            width: 200px;
+            margin-bottom: 10px;
+        }
+        
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        /* Indicator Table Styles */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        
+        /* Pivot Points Table Styles */
+        .pivot-table {
+            margin-bottom: 40px;
+        }
+        
+        .pivot-table table {
+            width: 100%;
+        }
+        
+        .pivot-table th {
+            background-color: #333;
+            color: white;
+            padding: 8px;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .pivot-table td {
+            padding: 8px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+        <!-- TradingView Widget BEGIN -->
+        <div class="tradingview-widget-container">
+          <div class="tradingview-widget-container__widget"></div>
+          <div class="tradingview-widget-copyright"><a href="https://in.tradingview.com/" rel="noopener nofollow" target="_blank"><span class="blue-text">Track all markets on TradingView</span></a></div>
+          <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-hotlists.js" async>
+          {
+          "colorTheme": "light",
+          "dateRange": "12M",
+          "exchange": "BSE",
+          "showChart": true,
+          "locale": "in",
+          "largeChartUrl": "",
+          "isTransparent": false,
+          "showSymbolLogo": false,
+          "showFloatingTooltip": false,
+          "width": "400",
+          "height": "600",
+          "plotLineColorGrowing": "rgba(41, 98, 255, 1)",
+          "plotLineColorFalling": "rgba(41, 98, 255, 1)",
+          "gridLineColor": "rgba(240, 243, 250, 0)",
+          "scaleFontColor": "rgba(106, 109, 120, 1)",
+          "belowLineFillColorGrowing": "rgba(41, 98, 255, 0.12)",
+          "belowLineFillColorFalling": "rgba(41, 98, 255, 0.12)",
+          "belowLineFillColorGrowingBottom": "rgba(41, 98, 255, 0)",
+          "belowLineFillColorFallingBottom": "rgba(41, 98, 255, 0)",
+          "symbolActiveColor": "rgba(41, 98, 255, 0.12)"
+        }
+          </script>
+        </div>
+        <!-- TradingView Widget END -->
+    <h1>Indicator Calculator</h1>
+
+    <!-- Add a section to display the correlation matrix -->
+<div>
+    <h2>Correlation Matrix</h2>
+    <table>
+      <thead>
+        <tr>
+          {% for index in indices %}
+            <th>{{ index }}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for index_row, correlation_row in correlation_matrix.items %}
+          <tr>
+            <th>{{ index_row }}</th>
+            {% for correlation_value in correlation_row %}
+              <td>{{ correlation_value }}</td>
+            {% endfor %}
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+    <form method="POST" action="{% url 'dashboard' %}">
+        {% csrf_token %}
+        <label for="ticker">Ticker Symbol:</label>
+        <select id="ticker" name="ticker" required>
+            <option></option>
+            {% for company_name in company_names %}
+                <option value="{{ company_name }}">{{ company_name }}</option>
+            {% endfor %}
+        </select>
+        <br>
+        <label for="interval">Time Interval:</label>
+        <select id="interval" name="interval" required>
+            <option value="5m">5 minutes</option>
+            <option value="15m">15 minutes</option>
+            <option value="30m">30 minutes</option>
+            <option value="1d">1 day</option>
+        </select>
+        <br>
+        <input type="submit" value="Calculate">
+    </form>
+    
+
+    {% if indicators %}
+    <h2>Indicators for {{ ticker }} ({{ interval }} interval):</h2>
+    <table>
+        <tr>
+            <th>Indicator</th>
+            <th>Value</th>
+            <th>Interpretation</th>
+            <th>Signal</th>  <!-- New column for Signal -->
+        </tr>
+        {% for indicator in indicators %}
+            <tr>
+                <td>{{ indicator.name }}</td>
+                <td>{{ indicator.value }}</td>
+                <td>{{ indicator.interpretation }}</td>
+                <td>{{ indicator.signal }}</td>  <!-- Display the Signal value -->
+            </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+
+
+    {% if pivot_values %}
+    <div class="pivot-table">
+        <h2>Pivot Points for {{ ticker }}:</h2>
+        <table>
+            <tr>
+                <th>R3</th>
+                <th>R2</th>
+                <th>R1</th>
+                <th>Pivot</th>
+                <th>S1</th>
+                <th>S2</th>
+                <th>S3</th>
+            </tr>
+            <tr>
+                <td>{{ pivot_values.0 }}</td>
+                <td>{{ pivot_values.1 }}</td>
+                <td>{{ pivot_values.2 }}</td>
+                <td>{{ pivot_values.3 }}</td>
+                <td>{{ pivot_values.4 }}</td>
+                <td>{{ pivot_values.5 }}</td>
+                <td>{{ pivot_values.6 }}</td>
+            </tr>
+        </table>
+    </div>
+    {% endif %}
+    
+    <script>
+        // Initialize Select2 dropdown
+        $(document).ready(function() {
+            $('#ticker').select2({
+                placeholder: "Search Company",
+                allowClear: true
+            });
+        });
+    </script>
+</body>
+</html>

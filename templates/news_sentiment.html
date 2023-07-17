@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>News Sentiment</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        form {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            outline: none;
+        }
+
+        button[type="submit"] {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table th, table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        table th {
+            background-color: #f2f2f2;
+        }
+
+        p.no-news {
+            text-align: center;
+            font-size: 18px;
+            color: #555;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="nav">
+        <nav>
+            <ul>
+                <li><a href="#about-us">About Us</a></li>
+                <li><a href="{% url 'news_sentiment' %}">News Sentiment</a></li>
+                <li><a href="{% url 'global' %}">Global</a></li>
+                <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+                <li><a href="{% url 'charts' %}">Charts</a></li>
+                <li><a href="#prediction">Prediction</a></li>
+                <li><a href="{%url 'technicals' %}">Technical Analysis</a></li>
+                <li><a href="{% url 'fundamentals' %}">Fundamentals</a></li>
+            </ul>
+        </nav>
+    </div>
+    <div class="container">
+        <h1>News Sentiment Analysis</h1>
+        <form method="POST">
+            {% csrf_token %}
+            <label for="stock">Enter any company name:</label>
+            <input type="text" name="stock" id="stock" required>
+            <button type="submit">Submit</button>
+        </form>
+
+        {% if data %}
+            <h2>News related to {{ name }}:</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Source</th>
+                        <th>Headline</th>
+                        <th>Sentiment Score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for link, news_list in data %}
+                        {% for headline, sentiment in news_list %}
+                            <tr>
+                                <td><a href="{{ link }}">{{ link }}</a></td>
+                                <td>{{ headline }}</td>
+                                <td>{{ sentiment }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p class="no-news">No news found related to {{ name }}.</p>
+        {% endif %}
+    </div>
+</body>
+</html>

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FUNDAMENTALS</title>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            height: 100%;
+            padding: 20px;
+        }
+
+        .tradingview-widget-container {
+            width: 100%;
+            height: 100%;
+        }
+
+        .widget-wrapper {
+            margin-bottom: 20px;
+        }
+
+        .input-wrapper {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        label {
+            margin-right: 10px;
+        }
+
+        input[type="text"] {
+            padding: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .widget-row {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .widget-column {
+            flex: 1;
+            margin: 0 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="widget-row">
+            <div class="widget-column">
+                <div class="widget-wrapper">
+                    <div class="input-wrapper">
+                        <label for="symbolInput">Enter Symbol:</label>
+                        <input type="text" id="symbolInput" value="BSE:RBLBANK" onchange="loadWidgets()">
+                    </div>
+                    <div class="tradingview-widget-container">
+                        <div class="tradingview-widget-container__widget"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="widget-column">
+                <div class="widget-wrapper">
+                    <div class="tradingview-widget-container">
+                        <div class="tradingview-widget-container__widget"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="widget-row">
+            <div class="widget-column">
+                <div class="tradingview-widget-container">
+                    <div class="tradingview-widget-container__widget"></div>
+                    <div class="tradingview-widget-container__widget"></div>
+                    <div class="tradingview-widget-container__widget"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        function loadWidgets() {
+            var symbol = document.getElementById('symbolInput').value;
+
+            // Load Symbol Profile Widget
+            var symbolProfileWidgetConfig = {
+                "width":550 ,
+                "height": 650,
+                "colorTheme": "light",
+                "isTransparent": false,
+                "symbol": symbol,
+                "locale": "in"
+            };
+            var symbolProfileScript = document.createElement('script');
+            symbolProfileScript.type = 'text/javascript';
+            symbolProfileScript.src = 'https://s3.tradingview.com/external-embedding/embed-widget-symbol-profile.js';
+            symbolProfileScript.async = true;
+            symbolProfileScript.innerHTML = JSON.stringify(symbolProfileWidgetConfig);
+            var symbolProfileContainers = document.getElementsByClassName('tradingview-widget-container__widget');
+            symbolProfileContainers[0].innerHTML = ''; // Clear previous widget
+            symbolProfileContainers[0].appendChild(symbolProfileScript);
+
+            // Load Financials Widget
+            var financialsWidgetConfig = {
+                "colorTheme": "light",
+                "isTransparent": false,
+                "largeChartUrl": "",
+                "displayMode": "regular",
+                "width": "850",
+                "height": "700",
+                "symbol": symbol,
+                "locale": "in"
+            };
+            var financialsScript = document.createElement('script');
+            financialsScript.type = 'text/javascript';
+            financialsScript.src = 'https://s3.tradingview.com/external-embedding/embed-widget-financials.js';
+            financialsScript.async = true;
+            financialsScript.innerHTML = JSON.stringify(financialsWidgetConfig);
+            symbolProfileContainers[1].innerHTML = ''; // Clear previous widget
+            symbolProfileContainers[1].appendChild(financialsScript);
+
+            // Load Symbol Overview Widget
+            var symbolOverviewWidgetConfig = {
+                "symbols": [[symbol + "|1D"]],
+                "chartOnly": false,
+                "width": 1300,
+                "height": 500,
+                "locale": "in",
+                "colorTheme": "light",
+                "autosize": false,
+                "showVolume": false,
+                "showMA": false,
+                "hideDateRanges": false,
+                "hideMarketStatus": false,
+                "hideSymbolLogo": false,
+                "scalePosition": "right",
+                "scaleMode": "Normal",
+                "fontFamily": "-apple-system, BlinkMacSystemFont, Trebuchet MS, Roboto, Ubuntu, sans-serif",
+                "fontSize": "10",
+                "noTimeScale": false,
+                "valuesTracking": "1",
+                "changeMode": "price-and-percent",
+                "chartType": "area",
+                "maLineColor": "#2962FF",
+                "maLineWidth": 1,
+                "maLength": 9,
+                "lineWidth": 2,
+                "lineType": 0,
+                "dateRanges": [
+                    "1d|1",
+                    "1m|30",
+                    "3m|60",
+                    "12m|1D",
+                    "60m|1W",
+                    "all|1M"
+                ]
+            };
+            var symbolOverviewScript = document.createElement('script');
+            symbolOverviewScript.type = 'text/javascript';
+            symbolOverviewScript.src = 'https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js';
+            symbolOverviewScript.async = true;
+            symbolOverviewScript.innerHTML = JSON.stringify(symbolOverviewWidgetConfig);
+            symbolProfileContainers[2].innerHTML = ''; // Clear previous widget
+            symbolProfileContainers[2].appendChild(symbolOverviewScript);
+        }
+    </script>
+
+    <script type="text/javascript">
+        loadWidgets();
+    </script>
+</body>
+</html>
