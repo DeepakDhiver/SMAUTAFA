@@ -17,12 +17,9 @@ def calculate_correlation(indices):
     # Update index names for better readability
     index_names = {
         "^NSEI": "Nifty India",
-        "^DJI": "Dow Jones USA",
         "^IXIC": "NASDAQ USA",
-        "^GSPC": "S&P 500 USA",
         "^FTSE": "FTSE UK",
         "^FCHI": "CAC 40 France",
-        "^N225": "NIKKEI Japan",
         "^STI": "STI Singapore",
         "^HSI": "Hang Seng Hong Kong"
     }
@@ -32,14 +29,15 @@ def calculate_correlation(indices):
     # Calculate correlation matrix
     correlation_matrix = data.corr()
 
-    # Plot correlation matrix as a heatmap
     plt.figure(figsize=(10, 8))
     sns.heatmap(correlation_matrix, annot=True, cmap="coolwarm", fmt=".2f", linewidths=0.5)
     plt.title("Correlation Matrix")
     plt.xticks(rotation=45)
     plt.yticks(rotation=0)
-    plt.show()
 
+    # Save the plot as a JPEG in memory
+    output_path = r"C:\Users\deepa\OneDrive\Desktop\Final Integration\SMAUTAFA\SMAUTAFA\static\images\correlation_matrix.jpg"
+    plt.savefig(output_path, format='jpeg')
     return correlation_matrix
 
 

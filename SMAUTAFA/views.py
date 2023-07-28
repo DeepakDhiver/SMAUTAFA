@@ -336,8 +336,14 @@ def dashboard(request):
         'company_names': company_names,  # Pass the company names to the template
     }
 
-    indices = ["^NSEI", "^DJI", "^IXIC", "^GSPC", "^FTSE", "^FCHI", "^N225", "^STI", "^HSI"]
-    calculate_correlation(indices)
+    indices = ["^NSEI", "^IXIC", "^GSPC", "^FTSE", "^FCHI",  "^STI", "^HSI"]
+    correlation_matrix_jpeg = calculate_correlation(indices)
+
+    # Pass the JPEG data to the template
+    correlation_matrix_path = r'C:\Users\deepa\OneDrive\Desktop\Final Integration\SMAUTAFA\SMAUTAFA\static\images\correlation_matrix.jpg'
+    context = {
+        'correlation_matrix_path': correlation_matrix_path
+    }
     return render(request, 'dashboard.html', context)
 
 

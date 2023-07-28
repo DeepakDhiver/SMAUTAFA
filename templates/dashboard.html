@@ -127,28 +127,11 @@
     <h1>Indicator Calculator</h1>
 
     <!-- Add a section to display the correlation matrix -->
-<div>
-    <h2>Correlation Matrix</h2>
-    <table>
-      <thead>
-        <tr>
-          {% for index in indices %}
-            <th>{{ index }}</th>
-          {% endfor %}
-        </tr>
-      </thead>
-      <tbody>
-        {% for index_row, correlation_row in correlation_matrix.items %}
-          <tr>
-            <th>{{ index_row }}</th>
-            {% for correlation_value in correlation_row %}
-              <td>{{ correlation_value }}</td>
-            {% endfor %}
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
+    <div>
+        <h2>Correlation Matrix</h2>
+        <img src="{% static 'images/correlation_matrix.jpg' %}" alt="Correlation Matrix">
+    </div>
+    
 
     <form method="POST" action="{% url 'dashboard' %}">
         {% csrf_token %}

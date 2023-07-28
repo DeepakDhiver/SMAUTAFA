@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-1%h@#e7dizondqzm$@rr4bmq3h*wrac82)a_%(6o5yiu-%a&^i
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['127.0.0.1']
+ALLOWED_HOSTS = ['stockmarketpredictiondeepakdhiver.azurewebsites.net']
 
 
 # Application definition
@@ -39,12 +39,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'matplot',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware'
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -128,10 +126,11 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static', 'STAUTAFA'),
-]
+# STATICFILES_DIRS = [
+#     os.path.join(BASE_DIR, 'static', 'STAUTAFA'),
+# ]
 
+STATICFILES_DIRS = [os.path.join(BASE_DIR,'SMAUTAFA/static'),]
 
 
 
