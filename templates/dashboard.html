@@ -2,8 +2,6 @@
 <html>
 <head>
     <title>Indicator Calculator</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
     <style>
         /* Global Styles */
         body {
@@ -93,54 +91,212 @@
     </style>
 </head>
 <body>
-
-        <!-- TradingView Widget BEGIN -->
-        <div class="tradingview-widget-container">
-          <div class="tradingview-widget-container__widget"></div>
-          <div class="tradingview-widget-copyright"><a href="https://in.tradingview.com/" rel="noopener nofollow" target="_blank"><span class="blue-text">Track all markets on TradingView</span></a></div>
-          <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-hotlists.js" async>
-          {
-          "colorTheme": "light",
-          "dateRange": "12M",
-          "exchange": "BSE",
-          "showChart": true,
-          "locale": "in",
-          "largeChartUrl": "",
-          "isTransparent": false,
-          "showSymbolLogo": false,
-          "showFloatingTooltip": false,
-          "width": "400",
-          "height": "600",
-          "plotLineColorGrowing": "rgba(41, 98, 255, 1)",
-          "plotLineColorFalling": "rgba(41, 98, 255, 1)",
-          "gridLineColor": "rgba(240, 243, 250, 0)",
-          "scaleFontColor": "rgba(106, 109, 120, 1)",
-          "belowLineFillColorGrowing": "rgba(41, 98, 255, 0.12)",
-          "belowLineFillColorFalling": "rgba(41, 98, 255, 0.12)",
-          "belowLineFillColorGrowingBottom": "rgba(41, 98, 255, 0)",
-          "belowLineFillColorFallingBottom": "rgba(41, 98, 255, 0)",
-          "symbolActiveColor": "rgba(41, 98, 255, 0.12)"
-        }
-          </script>
-        </div>
-        <!-- TradingView Widget END -->
     <h1>Indicator Calculator</h1>
-
-    <!-- Add a section to display the correlation matrix -->
-    <div>
-        <h2>Correlation Matrix</h2>
-        <img src="{% static 'images/correlation_matrix.jpg' %}" alt="Correlation Matrix">
-    </div>
-    
-
     <form method="POST" action="{% url 'dashboard' %}">
         {% csrf_token %}
         <label for="ticker">Ticker Symbol:</label>
-        <select id="ticker" name="ticker" required>
-            <option></option>
-            {% for company_name in company_names %}
-                <option value="{{ company_name }}">{{ company_name }}</option>
-            {% endfor %}
+        <select id="ticker" name="ticker" required> 
+        <option value="^CNX200.NS">NIFTY 200</option>
+        <option value="BAJFINANCE.NS">BAJFINANCE</option>
+        <option value="TTML.NS">TTML</option>
+        <option value="BAJAJFINSV.NS">BAJAJFINSV</option>
+        <option value="PNB.NS">PNB</option>
+        <option value="YESBANK.NS">YESBANK</option>
+        <option value="BANKINDIA.NS">BANKINDIA</option>
+        <option value="FEDERALBNK.NS">FEDERALBNK</option>
+        <option value="INDIANB.NS">INDIANB</option>
+        <option value="BAJAJHLDNG.NS">BAJAJHLDNG</option>
+        <option value="HEROMOTOCO.NS">HEROMOTOCO</option>
+        <option value="BANKBARODA.NS">BANKBARODA</option>
+        <option value="CHOLAFIN.NS">CHOLAFIN</option>
+        <option value="JSWENERGY.NS">JSWENERGY</option>
+        <option value="OIL.NS">OIL</option>
+        <option value="POLICYBZR.NS">POLICYBZR</option>
+        <option value="TITAN.NS">TITAN</option>
+        <option value="TATACHEM.NS">TATACHEM</option>
+        <option value="UNIONBANK.NS">UNIONBANK</option>
+        <option value="ADANIPORTS.NS">ADANIPORTS</option>
+        <option value="HONAUT.NS">HONAUT</option>
+        <option value="CANBK.NS">CANBK</option>
+        <option value="SBIN.NS">SBIN</option>
+        <option value="NAUKRI.NS">NAUKRI</option>
+        <option value="POONAWALLA.NS">POONAWALLA</option>
+        <option value="UBL.NS">UBL</option>
+        <option value="BAJAJ-AUTO.NS">BAJAJ-AUTO</option>
+        <option value="AWL.NS">AWL</option>
+        <option value="PFC.NS">PFC</option>
+        <option value="BOSCHLTD.NS">BOSCHLTD</option>
+        <option value="HDFCAMC.NS">HDFCAMC</option>
+        <option value="CROMPTON.NS">CROMPTON</option>
+        <option value="M&M.NS">M&M</option>
+        <option value="ADANIENT.NS">ADANIENT</option>
+        <option value="PGHH.NS">PGHH</option>
+        <option value="LTTS.NS">LTTS</option>
+        <option value="SUNTV.NS">SUNTV</option>
+        <option value="IRFC.NS">IRFC</option>
+        <option value="DMART.NS">DMART</option>
+        <option value="ZEEL.NS">ZEEL</option>
+        <option value="JINDALSTEL.NS">JINDALSTEL</option>
+        <option value="CONCOR.NS">CONCOR</option>
+        <option value="LUPIN.NS">LUPIN</option>
+        <option value="LT.NS">LT</option>
+        <option value="TATAMOTORS.NS">TATAMOTORS</option>
+        <option value="WIPRO.NS">WIPRO</option>
+        <option value="SBICARD.NS">SBICARD</option>
+        <option value="UPL.NS">UPL</option>
+        <option value="SAIL.NS">SAIL</option>
+        <option value="AUROPHARMA.NS">AUROPHARMA</option>
+        <option value="DRREDDY.NS">DRREDDY</option>
+        <option value="DIXON.NS">DIXON</option>
+        <option value="MSUMI.NS">MSUMI</option>
+        <option value="TRENT.NS">TRENT</option>
+        <option value="DLF.NS">DLF</option>
+        <option value="TECHM.NS">TECHM</option>
+        <option value="TCS.NS">TCS</option>
+        <option value="HINDZINC.NS">HINDZINC</option>
+        <option value="HDFCBANK.NS">HDFCBANK</option>
+        <option value="ADANIGREEN.NS">ADANIGREEN</option>
+        <option value="APOLLOTYRE.NS">APOLLOTYRE</option>
+        <option value="CUMMINSIND.NS">CUMMINSIND</option>
+        <option value="ALKEM.NS">ALKEM</option>
+        <option value="TORNTPOWER.NS">TORNTPOWER</option>
+        <option value="IPCALAB.NS">IPCALAB</option>
+        <option value="ADANIPOWER.NS">ADANIPOWER</option>
+        <option value="HDFC.NS">HDFC</option>
+        <option value="DELHIVERY.NS">DELHIVERY</option>
+        <option value="FLUOROCHEM.NS">FLUOROCHEM</option>
+        <option value="BATAINDIA.NS">BATAINDIA</option>
+        <option value="COFORGE.NS">COFORGE</option>
+        <option value="NAVINFLUOR.NS">NAVINFLUOR</option>
+        <option value="DEVYANI.NS">DEVYANI</option>
+        <option value="PAYTM.NS">PAYTM</option>
+        <option value="PETRONET.NS">PETRONET</option>
+        <option value="PIDILITIND.NS">PIDILITIND</option>
+        <option value="TVSMOTOR.NS">TVSMOTOR</option>
+        <option value="IRCTC.NS">IRCTC</option>
+        <option value="PAGEIND.NS">PAGEIND</option>
+        <option value="BALKRISIND.NS">BALKRISIND</option>
+        <option value="ABBOTINDIA.NS">ABBOTINDIA</option>
+        <option value="PIIND.NS">PIIND</option>
+        <option value="NESTLEIND.NS">NESTLEIND</option>
+        <option value="PRESTIGE.NS">PRESTIGE</option>
+        <option value="MUTHOOTFIN.NS">MUTHOOTFIN</option>
+        <option value="ABB.NS">ABB</option>
+        <option value="FORTIS.NS">FORTIS</option>
+        <option value="SUNPHARMA.NS">SUNPHARMA</option>
+        <option value="NHPC.NS">NHPC</option>
+        <option value="MPHASIS.NS">MPHASIS</option>
+        <option value="DEEPAKNTR.NS">DEEPAKNTR</option>
+        <option value="ABFRL.NS">ABFRL</option>
+        <option value="JSWSTEEL.NS">JSWSTEEL</option>
+        <option value="DALBHARAT.NS">DALBHARAT</option>
+        <option value="TATAPOWER.NS">TATAPOWER</option>
+        <option value="ICICIBANK.NS">ICICIBANK</option>
+        <option value="VEDL.NS">VEDL</option>
+        <option value="SRF.NS">SRF</option>
+        <option value="POLYCAB.NS">POLYCAB</option>
+        <option value="CIPLA.NS">CIPLA</option>
+        <option value="JUBLFOOD.NS">JUBLFOOD</option>
+        <option value="IOC.NS">IOC</option>
+        <option value="HCLTECH.NS">HCLTECH</option>
+        <option value="BPCL.NS">BPCL</option>
+        <option value="COALINDIA.NS">COALINDIA</option>
+        <option value="AUBANK.NS">AUBANK</option>
+        <option value="ADANITRANS.NS">ADANITRANS</option>
+        <option value="INFY.NS">INFY</option>
+        <option value="OBEROIRLTY.NS">OBEROIRLTY</option>
+        <option value="GAIL.NS">GAIL</option>
+        <option value="BERGEPAINT.NS">BERGEPAINT</option>
+        <option value="APOLLOHOSP.NS">APOLLOHOSP</option>
+        <option value="BHEL.NS">BHEL</option>
+        <option value="HINDALCO.NS">HINDALCO</option>
+        <option value="POWERGRID.NS">POWERGRID</option>
+        <option value="BANDHANBNK.NS">BANDHANBNK</option>
+        <option value="TIINDIA.NS">TIINDIA</option>
+        <option value="TRIDENT.NS">TRIDENT</option>
+        <option value="LICI.NS">LICI</option>
+        <option value="COROMANDEL.NS">COROMANDEL</option>
+        <option value="SHRIRAMFIN.NS">SHRIRAMFIN</option>
+        <option value="KOTAKBANK.NS">KOTAKBANK</option>
+        <option value="MCDOWELL-N.NS">MCDOWELL-N</option>
+        <option value="INDUSINDBK.NS">INDUSINDBK</option>
+        <option value="HAL.NS">HAL</option>
+        <option value="NTPC.NS">NTPC</option>
+        <option value="HDFCLIFE.NS">HDFCLIFE</option>
+        <option value="RAMCOCEM.NS">RAMCOCEM</option>
+        <option value="SBILIFE.NS">SBILIFE</option>
+        <option value="MOTHERSON.NS">MOTHERSON</option>
+        <option value="NMDC.NS">NMDC</option>
+        <option value="MFSL.NS">MFSL</option>
+        <option value="RECLTD.NS">RECLTD</option>
+        <option value="VOLTAS.NS">VOLTAS</option>
+        <option value="ULTRACEMCO.NS">ULTRACEMCO</option>
+        <option value="SHREECEM.NS">SHREECEM</option>
+        <option value="ACC.NS">ACC</option>
+        <option value="MARUTI.NS">MARUTI</option>
+        <option value="GLAND.NS">GLAND</option>
+        <option value="COLPAL.NS">COLPAL</option>
+        <option value="ABCAPITAL.NS">ABCAPITAL</option>
+        <option value="LALPATHLAB.NS">LALPATHLAB</option>
+        <option value="AMBUJACEM.NS">AMBUJACEM</option>
+        <option value="SIEMENS.NS">SIEMENS</option>
+        <option value="GODREJCP.NS">GODREJCP</option>
+        <option value="TATACONSUM.NS">TATACONSUM</option>
+        <option value="ATGL.NS">ATGL</option>
+        <option value="ICICIGI.NS">ICICIGI</option>
+        <option value="INDHOTEL.NS">INDHOTEL</option>
+        <option value="TATACOMM.NS">TATACOMM</option>
+        <option value="M&MFIN.NS">M&MFIN</option>
+        <option value="TORNTPHARM.NS">TORNTPHARM</option>
+        <option value="PERSISTENT.NS">PERSISTENT</option>
+        <option value="CGPOWER.NS">CGPOWER</option>
+        <option value="MARICO.NS">MARICO</option>
+        <option value="OFSS.NS">OFSS</option>
+        <option value="TATASTEEL.NS">TATASTEEL</option>
+        <option value="ITC.NS">ITC</option>
+        <option value="LTIM.NS">LTIM</option>
+        <option value="ZYDUSLIFE.NS">ZYDUSLIFE</option>
+        <option value="TATAELXSI.NS">TATAELXSI</option>
+        <option value="BHARATFORG.NS">BHARATFORG</option>
+        <option value="DABUR.NS">DABUR</option>
+        <option value="ASTRAL.NS">ASTRAL</option>
+        <option value="ICICIPRULI.NS">ICICIPRULI</option>
+        <option value="NYKAA.NS">NYKAA</option>
+        <option value="BRITANNIA.NS">BRITANNIA</option>
+        <option value="MRF.NS">MRF</option>
+        <option value="HINDUNILVR.NS">HINDUNILVR</option>
+        <option value="BIOCON.NS">BIOCON</option>
+        <option value="DIVISLAB.NS">DIVISLAB</option>
+        <option value="SYNGENE.NS">SYNGENE</option>
+        <option value="ASIANPAINT.NS">ASIANPAINT</option>
+        <option value="SONACOMS.NS">SONACOMS</option>
+        <option value="IDEA.NS">IDEA</option>
+        <option value="AXISBANK.NS">AXISBANK</option>
+        <option value="IGL.NS">IGL</option>
+        <option value="BEL.NS">BEL</option>
+        <option value="INDIGO.NS">INDIGO</option>
+        <option value="GUJGASLTD.NS">GUJGASLTD</option>
+        <option value="WHIRLPOOL.NS">WHIRLPOOL</option>
+        <option value="ZOMATO.NS">ZOMATO</option>
+        <option value="PATANJALI.NS">PATANJALI</option>
+        <option value="ESCORTS.NS">ESCORTS</option>
+        <option value="HAVELLS.NS">HAVELLS</option>
+        <option value="HINDPETRO.NS">HINDPETRO</option>
+        <option value="MAXHEALTH.NS">MAXHEALTH</option>
+        <option value="INDUSTOWER.NS">INDUSTOWER</option>
+        <option value="ONGC.NS">ONGC</option>
+        <option value="GODREJPROP.NS">GODREJPROP</option>
+        <option value="VBL.NS">VBL</option>
+        <option value="LICHSGFIN.NS">LICHSGFIN</option>
+        <option value="RELIANCE.NS">RELIANCE</option>
+        <option value="GRASIM.NS">GRASIM</option>
+        <option value="LAURUSLABS.NS">LAURUSLABS</option>
+        <option value="PEL.NS">PEL</option>
+        <option value="BHARTIARTL.NS">BHARTIARTL</option>
+        <option value="ASHOKLEY.NS">ASHOKLEY</option>
+        <option value="L&TFH.NS">L&TFH</option>
+        <option value="IDFCFIRSTB.NS">IDFCFIRSTB</option>
+        <option value="EICHERMOT.NS">EICHERMOT</option>
         </select>
         <br>
         <label for="interval">Time Interval:</label>
@@ -153,28 +309,30 @@
         <br>
         <input type="submit" value="Calculate">
     </form>
-    
 
     {% if indicators %}
-    <h2>Indicators for {{ ticker }} ({{ interval }} interval):</h2>
-    <table>
+    <h2>Indicators for {{ ticker }}:</h2>
+    <table border="1">
         <tr>
-            <th>Indicator</th>
+            <th>Name</th>
             <th>Value</th>
             <th>Interpretation</th>
-            <th>Signal</th>  <!-- New column for Signal -->
+            <th>Signal</th>
         </tr>
         {% for indicator in indicators %}
-            <tr>
-                <td>{{ indicator.name }}</td>
-                <td>{{ indicator.value }}</td>
-                <td>{{ indicator.interpretation }}</td>
-                <td>{{ indicator.signal }}</td>  <!-- Display the Signal value -->
-            </tr>
+        <tr>
+            <td>{{ indicator.name }}</td>
+            <td>{{ indicator.value }}</td>
+            <td>{{ indicator.interpretation }}</td>
+            <td>{{ indicator.signal }}</td>
+        </tr>
         {% endfor %}
     </table>
     {% endif %}
 
+    {% if overall_action %}
+    <h2>Overall Action: {{ overall_action }}</h2>
+    {% endif %}
 
     {% if pivot_values %}
     <div class="pivot-table">
@@ -201,15 +359,38 @@
         </table>
     </div>
     {% endif %}
-    
-    <script>
-        // Initialize Select2 dropdown
-        $(document).ready(function() {
-            $('#ticker').select2({
-                placeholder: "Search Company",
-                allowClear: true
-            });
-        });
+
+    <!-- TradingView Widget BEGIN -->
+<div class="tradingview-widget-container">
+    <div class="tradingview-widget-container__widget"></div>
+    <div class="tradingview-widget-copyright"><a href="https://in.tradingview.com/" rel="noopener nofollow" target="_blank"><span class="blue-text">Track all markets on TradingView</span></a></div>
+    <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-hotlists.js" async>
+    {
+    "colorTheme": "light",
+    "dateRange": "12M",
+    "exchange": "BSE",
+    "showChart": true,
+    "locale": "in",
+    "largeChartUrl": "",
+    "isTransparent": false,
+    "showSymbolLogo": false,
+    "showFloatingTooltip": false,
+    "width": "1475",
+    "height": "600",
+    "plotLineColorGrowing": "rgba(41, 98, 255, 1)",
+    "plotLineColorFalling": "rgba(41, 98, 255, 1)",
+    "gridLineColor": "rgba(240, 243, 250, 0)",
+    "scaleFontColor": "rgba(106, 109, 120, 1)",
+    "belowLineFillColorGrowing": "rgba(41, 98, 255, 0.12)",
+    "belowLineFillColorFalling": "rgba(41, 98, 255, 0.12)",
+    "belowLineFillColorGrowingBottom": "rgba(41, 98, 255, 0)",
+    "belowLineFillColorFallingBottom": "rgba(41, 98, 255, 0)",
+    "symbolActiveColor": "rgba(41, 98, 255, 0.12)"
+  }
     </script>
+  </div>
+  <!-- TradingView Widget END -->
+
+
 </body>
 </html>

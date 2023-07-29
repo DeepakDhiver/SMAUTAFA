@@ -16,10 +16,21 @@ from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import io
 import base64
 import matplotlib.pyplot as plt
+import seaborn as sns
 
 tokenizer = AutoTokenizer.from_pretrained("ipuneetrathore/bert-base-cased-finetuned-finBERT")
 finbert = AutoModelForSequenceClassification.from_pretrained("ipuneetrathore/bert-base-cased-finetuned-finBERT")
 
+
+def get_sentiment_label(sentiment_score):
+    if sentiment_score == 0:
+        return "Negative"
+    elif sentiment_score == 1:
+        return "Neutral"
+    elif sentiment_score == 2:
+        return "Positive"
+    else:
+        return "Unknown"
 
 def get_filtered_news_from_url(url, company_name):
     webpage = req.get(url)
@@ -35,16 +46,16 @@ def get_filtered_news_from_url(url, company_name):
             outputs = finbert(**encoded_inputs)[0]
             sentiment = np.argmax(outputs.detach().numpy())
 
+            # Convert sentiment score to label
+            sentiment_label = get_sentiment_label(sentiment)
+
             if link.get('href') == current_link:
-                current_news.append((headline, sentiment))
+                current_news.append((headline, sentiment_label))
             else:
                 if current_link is not None and len(current_news) > 0:
                     filtered_news.append((current_link, current_news))
                 current_link = link.get('href')
-                current_news = [(headline, sentiment)]
-
-    if current_link is not None and len(current_news) > 0:
-        filtered_news.append((current_link, current_news))
+                current_news = [(headline, sentiment_label)]
 
     return filtered_news
 
@@ -97,254 +108,31 @@ def news_sentiment(request):
 
 
 from django.shortcuts import render
-from .utils import calculate_correlation, calculate_indicators, calculate_pivot_points
+from .utils import  calculate_indicators, calculate_pivot_points
 
 
-company_mapping = {
-    'NIFTY 200': '^CNX200.NS',
-    'BAJFINANCE': 'BAJFINANCE.NS',
-    'TTML': 'TTML.NS',
-    'BAJAJFINSV': 'BAJAJFINSV.NS',
-    'PNB': 'PNB.NS',
-    'YESBANK': 'YESBANK.NS',
-    'BANKINDIA': 'BANKINDIA.NS',
-    'FEDERALBNK': 'FEDERALBNK.NS',
-    'INDIANB': 'INDIANB.NS',
-    'BAJAJHLDNG': 'BAJAJHLDNG.NS',
-    'HEROMOTOCO': 'HEROMOTOCO.NS',
-    'BANKBARODA': 'BANKBARODA.NS',
-    'CHOLAFIN': 'CHOLAFIN.NS',
-    'JSWENERGY': 'JSWENERGY.NS',
-    'OIL': 'OIL.NS',
-    'POLICYBZR': 'POLICYBZR.NS',
-    'TITAN': 'TITAN.NS',
-    'TATACHEM': 'TATACHEM.NS',
-    'UNIONBANK': 'UNIONBANK.NS',
-    'ADANIPORTS': 'ADANIPORTS.NS',
-    'HONAUT': 'HONAUT.NS',
-    'CANBK': 'CANBK.NS',
-    'SBIN': 'SBIN.NS',
-    'NAUKRI': 'NAUKRI.NS',
-    'POONAWALLA': 'POONAWALLA.NS',
-    'UBL': 'UBL.NS',
-    'BAJAJ-AUTO': 'BAJAJ-AUTO.NS',
-    'AWL': 'AWL.NS',
-    'PFC': 'PFC.NS',
-    'BOSCHLTD': 'BOSCHLTD.NS',
-    'HDFCAMC': 'HDFCAMC.NS',
-    'CROMPTON': 'CROMPTON.NS',
-    'M&M': 'M&M.NS',
-    'ADANIENT': 'ADANIENT.NS',
-    'PGHH': 'PGHH.NS',
-    'LTTS': 'LTTS.NS',
-    'SUNTV': 'SUNTV.NS',
-    'IRFC': 'IRFC.NS',
-    'DMART': 'DMART.NS',
-    'ZEEL': 'ZEEL.NS',
-    'JINDALSTEL': 'JINDALSTEL.NS',
-    'CONCOR': 'CONCOR.NS',
-    'LUPIN': 'LUPIN.NS',
-    'LT': 'LT.NS',
-    'TATAMOTORS': 'TATAMOTORS.NS',
-    'WIPRO': 'WIPRO.NS',
-    'SBICARD': 'SBICARD.NS',
-    'UPL': 'UPL.NS',
-    'SAIL': 'SAIL.NS',
-    'AUROPHARMA': 'AUROPHARMA.NS',
-    'DRREDDY': 'DRREDDY.NS',
-    'DIXON': 'DIXON.NS',
-    'MSUMI': 'MSUMI.NS',
-    'TRENT': 'TRENT.NS',
-    'DLF': 'DLF.NS',
-    'TECHM': 'TECHM.NS',
-    'TCS': 'TCS.NS',
-    'HINDZINC': 'HINDZINC.NS',
-    'HDFCBANK': 'HDFCBANK.NS',
-    'ADANIGREEN': 'ADANIGREEN.NS',
-    'APOLLOTYRE': 'APOLLOTYRE.NS',
-    'CUMMINSIND': 'CUMMINSIND.NS',
-    'ALKEM': 'ALKEM.NS',
-    'TORNTPOWER': 'TORNTPOWER.NS',
-    'IPCALAB': 'IPCALAB.NS',
-    'ADANIPOWER': 'ADANIPOWER.NS',
-    'HDFC': 'HDFC.NS',
-    'DELHIVERY': 'DELHIVERY.NS',
-    'FLUOROCHEM': 'FLUOROCHEM.NS',
-    'BATAINDIA': 'BATAINDIA.NS',
-    'COFORGE': 'COFORGE.NS',
-    'NAVINFLUOR': 'NAVINFLUOR.NS',
-    'DEVYANI': 'DEVYANI.NS',
-    'PAYTM': 'PAYTM.NS',
-    'PETRONET': 'PETRONET.NS',
-    'PIDILITIND': 'PIDILITIND.NS',
-    'TVSMOTOR': 'TVSMOTOR.NS',
-    'IRCTC': 'IRCTC.NS',
-    'PAGEIND': 'PAGEIND.NS',
-    'BALKRISIND': 'BALKRISIND.NS',
-    'ABBOTINDIA': 'ABBOTINDIA.NS',
-    'PIIND': 'PIIND.NS',
-    'NESTLEIND': 'NESTLEIND.NS',
-    'PRESTIGE': 'PRESTIGE.NS',
-    'MUTHOOTFIN': 'MUTHOOTFIN.NS',
-    'ABB': 'ABB.NS',
-    'FORTIS': 'FORTIS.NS',
-    'SUNPHARMA': 'SUNPHARMA.NS',
-    'NHPC': 'NHPC.NS',
-    'MPHASIS': 'MPHASIS.NS',
-    'DEEPAKNTR': 'DEEPAKNTR.NS',
-    'ABFRL': 'ABFRL.NS',
-    'JSWSTEEL': 'JSWSTEEL.NS',
-    'DALBHARAT': 'DALBHARAT.NS',
-    'TATAPOWER': 'TATAPOWER.NS',
-    'ICICIBANK': 'ICICIBANK.NS',
-    'VEDL': 'VEDL.NS',
-    'SRF': 'SRF.NS',
-    'POLYCAB': 'POLYCAB.NS',
-    'CIPLA': 'CIPLA.NS',
-    'JUBLFOOD': 'JUBLFOOD.NS',
-    'IOC': 'IOC.NS',
-    'HCLTECH': 'HCLTECH.NS',
-    'BPCL': 'BPCL.NS',
-    'COALINDIA': 'COALINDIA.NS',
-    'AUBANK': 'AUBANK.NS',
-    'ADANITRANS': 'ADANITRANS.NS',
-    'INFY': 'INFY.NS',
-    'OBEROIRLTY': 'OBEROIRLTY.NS',
-    'GAIL': 'GAIL.NS',
-    'BERGEPAINT': 'BERGEPAINT.NS',
-    'APOLLOHOSP': 'APOLLOHOSP.NS',
-    'BHEL': 'BHEL.NS',
-    'HINDALCO': 'HINDALCO.NS',
-    'POWERGRID': 'POWERGRID.NS',
-    'BANDHANBNK': 'BANDHANBNK.NS',
-    'TIINDIA': 'TIINDIA.NS',
-    'TRIDENT': 'TRIDENT.NS',
-    'LICI': 'LICI.NS',
-    'COROMANDEL': 'COROMANDEL.NS',
-    'SHRIRAMFIN': 'SHRIRAMFIN.NS',
-    'KOTAKBANK': 'KOTAKBANK.NS',
-    'MCDOWELL-N': 'MCDOWELL-N.NS',
-    'INDUSINDBK': 'INDUSINDBK.NS',
-    'HAL': 'HAL.NS',
-    'NTPC': 'NTPC.NS',
-    'HDFCLIFE': 'HDFCLIFE.NS',
-    'RAMCOCEM': 'RAMCOCEM.NS',
-    'SBILIFE': 'SBILIFE.NS',
-    'MOTHERSON': 'MOTHERSON.NS',
-    'NMDC': 'NMDC.NS',
-    'MFSL': 'MFSL.NS',
-    'RECLTD': 'RECLTD.NS',
-    'VOLTAS': 'VOLTAS.NS',
-    'ULTRACEMCO': 'ULTRACEMCO.NS',
-    'SHREECEM': 'SHREECEM.NS',
-    'ACC': 'ACC.NS',
-    'MARUTI': 'MARUTI.NS',
-    'GLAND': 'GLAND.NS',
-    'COLPAL': 'COLPAL.NS',
-    'ABCAPITAL': 'ABCAPITAL.NS',
-    'LALPATHLAB': 'LALPATHLAB.NS',
-    'AMBUJACEM': 'AMBUJACEM.NS',
-    'SIEMENS': 'SIEMENS.NS',
-    'GODREJCP': 'GODREJCP.NS',
-    'TATACONSUM': 'TATACONSUM.NS',
-    'ATGL': 'ATGL.NS',
-    'ICICIGI': 'ICICIGI.NS',
-    'INDHOTEL': 'INDHOTEL.NS',
-    'TATACOMM': 'TATACOMM.NS',
-    'M&MFIN': 'M&MFIN.NS',
-    'TORNTPHARM': 'TORNTPHARM.NS',
-    'PERSISTENT': 'PERSISTENT.NS',
-    'CGPOWER': 'CGPOWER.NS',
-    'MARICO': 'MARICO.NS',
-    'OFSS': 'OFSS.NS',
-    'TATASTEEL': 'TATASTEEL.NS',
-    'ITC': 'ITC.NS',
-    'LTIM': 'LTIM.NS',
-    'ZYDUSLIFE': 'ZYDUSLIFE.NS',
-    'TATAELXSI': 'TATAELXSI.NS',
-    'BHARATFORG': 'BHARATFORG.NS',
-    'DABUR': 'DABUR.NS',
-    'ASTRAL': 'ASTRAL.NS',
-    'ICICIPRULI': 'ICICIPRULI.NS',
-    'NYKAA': 'NYKAA.NS',
-    'BRITANNIA': 'BRITANNIA.NS',
-    'MRF': 'MRF.NS',
-    'HINDUNILVR': 'HINDUNILVR.NS',
-    'BIOCON': 'BIOCON.NS',
-    'DIVISLAB': 'DIVISLAB.NS',
-    'SYNGENE': 'SYNGENE.NS',
-    'ASIANPAINT': 'ASIANPAINT.NS',
-    'SONACOMS': 'SONACOMS.NS',
-    'IDEA': 'IDEA.NS',
-    'AXISBANK': 'AXISBANK.NS',
-    'IGL': 'IGL.NS',
-    'BEL': 'BEL.NS',
-    'INDIGO': 'INDIGO.NS',
-    'GUJGASLTD': 'GUJGASLTD.NS',
-    'WHIRLPOOL': 'WHIRLPOOL.NS',
-    'ZOMATO': 'ZOMATO.NS',
-    'PATANJALI': 'PATANJALI.NS',
-    'ESCORTS': 'ESCORTS.NS',
-    'HAVELLS': 'HAVELLS.NS',
-    'HINDPETRO': 'HINDPETRO.NS',
-    'MAXHEALTH': 'MAXHEALTH.NS',
-    'INDUSTOWER': 'INDUSTOWER.NS',
-    'ONGC': 'ONGC.NS',
-    'GODREJPROP': 'GODREJPROP.NS',
-    'VBL': 'VBL.NS',
-    'LICHSGFIN': 'LICHSGFIN.NS',
-    'RELIANCE': 'RELIANCE.NS',
-    'GRASIM': 'GRASIM.NS',
-    'LAURUSLABS': 'LAURUSLABS.NS',
-    'PEL': 'PEL.NS',
-    'BHARTIARTL': 'BHARTIARTL.NS',
-    'ASHOKLEY': 'ASHOKLEY.NS',
-    'L&TFH': 'L&TFH.NS',
-    'IDFCFIRSTB': 'IDFCFIRSTB.NS',
-    'EICHERMOT': 'EICHERMOT.NS'
-}
 
 def dashboard(request):
-
-    
-    # Get the list of company names from the mapping
-    company_names = list(company_mapping.keys())
-    
     if request.method == 'POST':
-        ticker = request.POST['ticker']
-        interval = request.POST['interval']
+        selected_company_name = request.POST.get('ticker')
+        interval = request.POST.get('interval')
         
-        # Convert the selected company name to the corresponding ticker symbol
-        ticker = company_mapping.get(ticker, '')
-        
-        # Calculate indicators
-        indicators = calculate_indicators(ticker, interval)
+        # Check if a company name is selected
+        if selected_company_name:
+            # Calculate indicators
+            indicators = calculate_indicators(selected_company_name, interval)
 
-        # Calculate pivot points
-        pivot_values = calculate_pivot_points(ticker)
+            # Calculate pivot points
+            pivot_values = calculate_pivot_points(selected_company_name)
 
-        context = {
-            'indicators': indicators,
-            'pivot_values': pivot_values,
-            'ticker': ticker,
-            'interval': interval,
-            'company_names': company_names,  # Pass the company names to the template
-        }
-        return render(request, 'dashboard.html', context)
-    
-    context = {
-        'company_names': company_names,  # Pass the company names to the template
-    }
-
-    indices = ["^NSEI", "^IXIC", "^GSPC", "^FTSE", "^FCHI",  "^STI", "^HSI"]
-    correlation_matrix_jpeg = calculate_correlation(indices)
-
-    # Pass the JPEG data to the template
-    correlation_matrix_path = r'C:\Users\deepa\OneDrive\Desktop\Final Integration\SMAUTAFA\SMAUTAFA\static\images\correlation_matrix.jpg'
-    context = {
-        'correlation_matrix_path': correlation_matrix_path
-    }
-    return render(request, 'dashboard.html', context)
+            context = {
+                'indicators': indicators,
+                'pivot_values': pivot_values,
+                'ticker': selected_company_name,
+                'interval': interval,
+            }
+            return render(request, 'dashboard.html', context)
+    return render(request, 'dashboard.html')
 
 
 

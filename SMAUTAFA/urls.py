@@ -12,6 +12,7 @@ urlpatterns = [
     path('technicals/', views.technicals, name='technicals'),
     path('fundamentals/', views.fundamentals, name='fundamentals'),
 
+
 ]
 
 if settings.DEBUG:
